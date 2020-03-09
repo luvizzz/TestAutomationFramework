@@ -1,2 +1,5 @@
 # Project exclude paths
 /sut/target/
+/sut/sut.iml
+/taf/taf.iml
+/.idea/*
