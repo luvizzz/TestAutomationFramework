@@ -2,12 +2,10 @@ package domain;
 
 import java.util.Objects;
 
-public class Car {
+public class Shop {
     private long id;
 
     private String name;
-
-    private Manufacturer manufacturer;
 
     public long getId() {
         return id;
@@ -25,14 +23,6 @@ public class Car {
         this.name = name;
     }
 
-    public Manufacturer getManufacturer() {
-        return manufacturer;
-    }
-
-    public void setManufacturer(Manufacturer manufacturer) {
-        this.manufacturer = manufacturer;
-    }
-
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
@@ -46,15 +36,14 @@ public class Car {
             return false;
         if (getClass() != that.getClass())
             return false;
-        Car other = (Car) that;
+        Shop other = (Shop) that;
         return id == other.getId();
     }
 
     @Override
     public String toString() {
-        return String.format("ID: %s, Name: %s, Manufacturer: %s",
+        return String.format("ID: %s, Name: %s",
                 getId(),
-                getName(),
-                getManufacturer().toString());
+                getName());
     }
 }
