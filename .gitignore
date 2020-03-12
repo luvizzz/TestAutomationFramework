@@ -3,3 +3,7 @@
 /sut/sut.iml
 /taf/taf.iml
 /.idea/*
+/taf-allure/.allure/*
+/taf-allure/target/*
+/taf-allure/taf-allure.iml
+/taf-allure/allure-results/*
