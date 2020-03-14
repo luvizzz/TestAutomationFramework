@@ -46,4 +46,14 @@ public class Car {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "- CarId: %s%n- CarName: %s%n- Manufacturer: %s",
+                this.getId(),
+                this.getName(),
+                (this.getManufacturer() == null ? "null" : this.getManufacturer().toString())
+        );
+    }
 }

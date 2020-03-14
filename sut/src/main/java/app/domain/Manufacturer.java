@@ -42,4 +42,15 @@ public class Manufacturer {
     public void setName(String name) {
         this.name = name;
     }
+
+
+    @Override
+    public String toString() {
+        return String.format(
+                "- ManufacturerId: %s%n- ManufacturerName: %s%n- Country: %s",
+                this.getId(),
+                this.getName(),
+                (this.getOriginCountry() == null ? "null" : this.getOriginCountry().toString())
+        );
+    }
 }
