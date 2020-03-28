@@ -1,6 +1,7 @@
 package app.resource;
 
 import app.domain.Car;
+import app.domain.Shop;
 import app.domain.Stock;
 import app.domain.StockKey;
 import org.springframework.data.repository.CrudRepository;
@@ -11,4 +12,6 @@ import java.util.List;
 @Repository
 public interface StockRepository extends CrudRepository<Stock, StockKey> {
     List<Stock> findByCar(Car carKey);
+
+    List<Stock> findByShop(Shop shopKey);
 }
