@@ -1,5 +1,6 @@
 package app.resource;
 
+import app.domain.Country;
 import app.domain.Manufacturer;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -10,4 +11,6 @@ import java.util.List;
 public interface ManufacturerRepository extends CrudRepository<Manufacturer, Long> {
 
     List<Manufacturer> findByName(String name);
+
+    List<Manufacturer> findByOriginCountry(Country country);
 }

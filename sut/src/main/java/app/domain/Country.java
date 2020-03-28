@@ -2,21 +2,20 @@ package app.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.util.Arrays;
 
 @Entity
 public class Country {
 
     @Id
-    private char[] code;
+    private String code;
 
     private String name;
 
-    public char[] getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(char[] code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
@@ -30,6 +29,6 @@ public class Country {
 
     @Override
     public String toString() {
-        return String.format("%n- CountryCode: %s%n- CountryName: %s", Arrays.toString(this.getCode()), this.getName());
+        return String.format("%n- CountryCode: %s%n- CountryName: %s", this.getCode(), this.getName());
     }
 }
