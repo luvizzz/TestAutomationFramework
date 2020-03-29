@@ -9,7 +9,7 @@
     </properties>
 
 
-    <groupId>org.taf</groupId>
+    <groupId>org.testautomationframework</groupId>
     <artifactId>taf</artifactId>
     <version>1.0-SNAPSHOT</version>
     <dependencies>
