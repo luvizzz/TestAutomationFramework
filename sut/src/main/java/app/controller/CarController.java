@@ -26,6 +26,8 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+
 @RestController
 @RequestMapping("/car")
 @SuppressWarnings("deprecation")
@@ -114,7 +116,7 @@ public class CarController extends BaseController {
         repository.save(car);
 
         URI location = URI.create(String.format("/car/%d", car.getId()));
-        return ResponseEntity.created(location).body(car.toString());
+        return ResponseEntity.created(location).contentType(APPLICATION_JSON).body(car.toString());
     }
 
     @PutMapping(value = "/{id}")

@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @RestController
 @RequestMapping("/country")
@@ -122,7 +123,7 @@ public class CountryController extends BaseController {
         URI location = URI.create(String.format("/country/%s", country.getCode()));
         Optional<Country> maybeCountry = repository.findById(country.getCode());
 
-        return maybeCountry.map(c -> ResponseEntity.created(location).body(c.toString()))
+        return maybeCountry.map(c -> ResponseEntity.created(location).contentType(APPLICATION_JSON).body(c.toString()))
                 .orElseGet(() -> createErrorResponse(ENTITY_COULD_NOT_BE_CREATED_MSG));
     }
 

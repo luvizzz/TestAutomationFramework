@@ -26,6 +26,8 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+
 @RestController
 @RequestMapping("/manufacturer")
 @SuppressWarnings("deprecation")
@@ -112,7 +114,7 @@ public class ManufacturerController extends BaseController {
         repository.save(manufacturer);
 
         URI location = URI.create(String.format("/manufacturer/%d", manufacturer.getId()));
-        return ResponseEntity.created(location).body(manufacturer.toString());
+        return ResponseEntity.created(location).contentType(APPLICATION_JSON).body(manufacturer.toString());
     }
 
     @PutMapping(value="/{id}")
