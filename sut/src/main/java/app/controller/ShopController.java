@@ -6,7 +6,6 @@ import app.resource.StockRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,9 +29,8 @@ import java.util.stream.StreamSupport;
 @RequestMapping("/shop")
 @SuppressWarnings("deprecation")
 @Api(value="Shop Management Endpoints", tags = "Shop", description="Manage your Shops")
-public class ShopController {
+public class ShopController extends BaseController {
     private final static Logger LOG = Logger.getLogger(ManufacturerController.class.getSimpleName());
-    private final static String EXISTS_IN_STOCK_MSG = "Shop with id \"%d\" is present in stock. Please remove this dependency first.";
 
     @Autowired
     ShopRepository repository;
@@ -54,6 +52,7 @@ public class ShopController {
 
     public ShopController(ShopRepository repository) {
         this.repository = repository;
+        path = "/shop";
     }
 
     @GetMapping
@@ -64,6 +63,7 @@ public class ShopController {
         LOG.info(String.format("(getShops) Input id: %d; Input name: %s",
                 maybeId.orElse((long) 0),
                 maybeName.orElse("null")));
+
         Iterable<Shop> shops = repository.findAll();
 
         List<Shop> filteredShops = StreamSupport.stream(shops.spliterator(), false)
@@ -83,6 +83,7 @@ public class ShopController {
     public ResponseEntity<Shop> getShopById(@PathVariable("id") Long id) {
         LOG.info(String.format("(getShopById) Input id: %d", id));
         Optional<Shop> shop = repository.findById(id);
+
         return shop.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
     }
 
@@ -92,28 +93,25 @@ public class ShopController {
         LOG.info(String.format("(postShop) Input shop: %s", shop.toString()));
 
         if(shop.getId() != 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please do not provide id when creating a shop.");
+            return createErrorResponse(ID_PROVIDED_IN_BODY_MSG);
         }
 
         repository.save(shop);
 
-        if(repository.existsById(shop.getId())) {
-            URI location = URI.create(String.format("/shop/%d", shop.getId()));
-            return ResponseEntity.created(location).body(String.format("Shop with id \"%d\" created.", shop.getId()));
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Car could not be created.");
-        }
+        URI location = URI.create(String.format("/shop/%d", shop.getId()));
+        return ResponseEntity.created(location).body(shop.toString());
     }
 
     @PutMapping(value="/{id}")
     @ApiOperation(value = "Updates shop with specified id")
     public ResponseEntity<String> putShopById(@PathVariable("id") Long id, @RequestBody Shop newShop) {
         LOG.info(String.format("(putShopById) Input id: %d", id));
+
         if(newShop.getId() != 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please do not provide id in body.");
+            return createErrorResponse(ID_PROVIDED_IN_BODY_MSG);
         }
         if(!repository.existsById(id)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unable to update shop which does not exist.");
+            return createErrorResponse(ENTITY_DOES_NOT_EXIST_MSG);
         }
 
         Optional<Shop> maybeShop = repository.findById(id)
@@ -122,8 +120,8 @@ public class ShopController {
                     return repository.save(currentShop);
                 });
 
-        return maybeShop.map(shop -> ResponseEntity.ok(String.format("Shop with id \"%d\" updated.", shop.getId())))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Shop could not be updated."));
+        return maybeShop.map(s -> ResponseEntity.ok(s.toString()))
+                .orElseGet(() -> createErrorResponse(ENTITY_COULD_NOT_BE_UPDATED_MSG));
     }
 
     @DeleteMapping(value="/{id}")
@@ -134,10 +132,10 @@ public class ShopController {
         Optional<Shop> maybeShop = repository.findById(id);
 
         if(maybeShop.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Shop with id \"%d\" does not exist.", id));
+            return createErrorResponse(ENTITY_DOES_NOT_EXIST_MSG);
         } else {
             if(existsInStock(maybeShop.get())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.format(EXISTS_IN_STOCK_MSG, id));
+                return createErrorResponse(DEPENDENCY_EXISTS_MSG);
             }
             repository.deleteById(id);
             return ResponseEntity.noContent().build();

@@ -3,10 +3,10 @@ package app.controller;
 import app.domain.Country;
 import app.resource.CountryRepository;
 import app.resource.ManufacturerRepository;
+import app.utils.ErrorMessage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,16 +26,23 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
 @RestController
 @RequestMapping("/country")
 @SuppressWarnings("deprecation")
 @Api(value = "Country Management Endpoints", tags = "Country", description = "Manage your Countries")
-public class CountryController {
-    private final static Logger LOG = Logger.getLogger(CountryController.class.getSimpleName());
-    private final static String EXISTS_IN_MANUFACTURER_MSG = "Country with code \"%s\" is present in manufacturer. Please remove this dependency first.";
-    private final static String INVALID_CODE_MSG = "Please provide a code of minimum %d and maximum %d characters.";
-    private final static int MIN_CODE_LENGTH = 2;
-    private final static int MAX_CODE_LENGTH = 2;
+public class CountryController extends BaseController {
+    private static final Logger LOG = Logger.getLogger(CountryController.class.getSimpleName());
+
+    private static final int MIN_CODE_LENGTH = 2;
+    private static final int MAX_CODE_LENGTH = 2;
+    private static final ErrorMessage INVALID_CODE_MSG = new ErrorMessage(
+            BAD_REQUEST,
+            String.format("Please provide a code of minimum %d and maximum %d characters",
+                    MIN_CODE_LENGTH,
+                    MAX_CODE_LENGTH)
+            );
 
     @Autowired
     CountryRepository repository;
@@ -61,6 +68,7 @@ public class CountryController {
 
     public CountryController(CountryRepository repository) {
         this.repository = repository;
+        path = "/country";
     }
 
     @GetMapping
@@ -90,6 +98,7 @@ public class CountryController {
     @ApiOperation(value = "Gets country by code")
     public ResponseEntity<Country> getCountryByCode(@PathVariable("code") String code) {
         LOG.info(String.format("(getCountryByCode) Input code: %s", code));
+
         Optional<Country> country = repository.findById(code);
         return country.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
     }
@@ -100,26 +109,21 @@ public class CountryController {
     public ResponseEntity<String> postCountry(@RequestBody Country country) {
         LOG.info(String.format("(postCountry) Input country: %s", country.toString()));
 
-        if (country.getCode().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please provide a valid code.");
-        }
-
-        if (!expectedCodeLength(country.getCode())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.format(INVALID_CODE_MSG, MIN_CODE_LENGTH, MAX_CODE_LENGTH));
+        if (country.getCode().isEmpty() || !expectedCodeLength(country.getCode())) {
+            return createErrorResponse(INVALID_CODE_MSG);
         }
 
         if (repository.existsById(country.getCode())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.format("Country with code \"%s\" already exists    .", country.getCode()));
+            return createErrorResponse(ENTITY_ALREADY_EXISTS_MSG);
         }
 
         repository.save(country);
 
-        if (repository.existsById(country.getCode())) {
-            URI location = URI.create(String.format("/country/%s", country.getCode()));
-            return ResponseEntity.created(location).body(String.format("Country with code \"%s\" created.", country.getCode()));
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Country could not be created.");
-        }
+        URI location = URI.create(String.format("/country/%s", country.getCode()));
+        Optional<Country> maybeCountry = repository.findById(country.getCode());
+
+        return maybeCountry.map(c -> ResponseEntity.created(location).body(c.toString()))
+                .orElseGet(() -> createErrorResponse(ENTITY_COULD_NOT_BE_CREATED_MSG));
     }
 
     @PutMapping(value = "/{code}")
@@ -128,10 +132,10 @@ public class CountryController {
         LOG.info(String.format("(putCountryByCode) Input code: %s", code));
 
         if (newCountry.getCode() != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please do not provide country code in body.");
+            return createErrorResponse(COUNTRY_CODE_PROVIDED_IN_BODY_MSG);
         }
         if (!repository.existsById(code)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unable to update country which does not exist.");
+            return createErrorResponse(ENTITY_DOES_NOT_EXIST_MSG);
         }
 
         Optional<Country> maybeCountry = repository.findById(code)
@@ -140,8 +144,8 @@ public class CountryController {
                     return repository.save(currentCountry);
                 });
 
-        return maybeCountry.map(country -> ResponseEntity.ok(String.format("Country with code \"%s\" updated.", country.getCode())))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Country could not be updated."));
+        return maybeCountry.map(c -> ResponseEntity.ok(c.toString()))
+                .orElseGet(() -> createErrorResponse(ENTITY_COULD_NOT_BE_UPDATED_MSG));
     }
 
     @DeleteMapping(value = "/{code}")
@@ -152,10 +156,10 @@ public class CountryController {
         Optional<Country> maybeCountry = repository.findById(code);
 
         if (maybeCountry.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Country with code \"%s\" does not exist.", code));
+            return createErrorResponse(ENTITY_DOES_NOT_EXIST_MSG);
         } else {
             if (existsInManufacturer(maybeCountry.get())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.format(EXISTS_IN_MANUFACTURER_MSG, code));
+                return createErrorResponse(DEPENDENCY_EXISTS_MSG);
             }
             repository.deleteById(code);
             return ResponseEntity.noContent().build();

@@ -1,12 +1,18 @@
 package app.domain;
 
+import app.utils.JsonProperty;
+import app.utils.Utils;
+
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.Table;
+import java.util.List;
 
 @Entity
+@Table(name="stock", schema="sut")
 public class Stock {
 
     @EmbeddedId
@@ -24,28 +30,21 @@ public class Stock {
 
     int stock;
 
-    public StockKey getId() {
-        return id;
+    public long getCarId() {
+        return car.getId();
     }
 
-    public void setId(StockKey id) {
-        this.id = id;
+    public void setCarId(long carId) {
+        this.car = new Car();
+        this.car.setId(carId);
+    }
+    public long getShopId() {
+        return shop.getId();
     }
 
-    public Car getCar() {
-        return car;
-    }
-
-    public void setCar(Car car) {
-        this.car = car;
-    }
-
-    public Shop getShop() {
-        return shop;
-    }
-
-    public void setShop(Shop shop) {
-        this.shop = shop;
+    public void setShopId(long shopId) {
+        this.shop = new Shop();
+        this.shop.setId(shopId);
     }
 
     public int getStock() {
@@ -54,5 +53,19 @@ public class Stock {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+
+    public void setId(StockKey key) {
+        this.id = key;
+    }
+
+    @Override
+    public String toString() {
+        return Utils.toJson(List.of(
+                new JsonProperty("carId", getCarId()),
+                new JsonProperty("shopId", getShopId()),
+                new JsonProperty("stock", getStock())
+        ));
     }
 }

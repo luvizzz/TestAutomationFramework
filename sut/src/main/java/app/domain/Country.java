@@ -1,9 +1,15 @@
 package app.domain;
 
+import app.utils.JsonProperty;
+import app.utils.Utils;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import java.util.List;
 
 @Entity
+@Table(name="country", schema="sut")
 public class Country {
 
     @Id
@@ -29,6 +35,9 @@ public class Country {
 
     @Override
     public String toString() {
-        return String.format("%n- CountryCode: %s%n- CountryName: %s", this.getCode(), this.getName());
+        return Utils.toJson(List.of(
+                new JsonProperty("code", getCode()),
+                new JsonProperty("name", getName())
+        ));
     }
 }

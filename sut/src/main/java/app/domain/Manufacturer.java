@@ -1,13 +1,19 @@
 package app.domain;
 
 
+import app.utils.JsonProperty;
+import app.utils.Utils;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.List;
 
 @Entity
+@Table(name="manufacturer", schema="sut")
 public class Manufacturer {
 
     @Id
@@ -18,14 +24,6 @@ public class Manufacturer {
 
     @ManyToOne
     private Country originCountry;
-
-    public Country getOriginCountry() {
-        return originCountry;
-    }
-
-    public void setOriginCountry(Country originCountry) {
-        this.originCountry = originCountry;
-    }
 
     public long getId() {
         return id;
@@ -43,14 +41,21 @@ public class Manufacturer {
         this.name = name;
     }
 
+    public String getCountryCode() {
+        return originCountry != null ? originCountry.getCode() : null;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.originCountry = new Country();
+        this.originCountry.setCode(countryCode);
+    }
 
     @Override
     public String toString() {
-        return String.format(
-                "- ManufacturerId: %s%n- ManufacturerName: %s%n- Country: %s",
-                this.getId(),
-                this.getName(),
-                (this.getOriginCountry() == null ? "null" : this.getOriginCountry().toString())
-        );
+        return Utils.toJson(List.of(
+                new JsonProperty("id", getId()),
+                new JsonProperty("name", getName()),
+                new JsonProperty("countryCode", getCountryCode())
+        ));
     }
 }
