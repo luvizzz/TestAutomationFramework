@@ -1,15 +1,15 @@
 package domain;
 
 public class Country {
-    private char[] code;
+    private String code;
 
     private String name;
 
-    public char[] getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(char[] code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
