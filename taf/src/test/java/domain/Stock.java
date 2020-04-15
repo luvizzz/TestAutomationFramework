@@ -1,9 +1,9 @@
 package domain;
 
 public class Stock {
-    private Car car;
+    private Long carId;
 
-    private Shop shop;
+    private Long shopId;
 
     private int stock;
 
@@ -17,20 +17,20 @@ public class Stock {
         this.id = id;
     }
 
-    public Car getCar() {
-        return car;
+    public Long getCarId() {
+        return carId;
     }
 
-    public void setCar(Car car) {
-        this.car = car;
+    public void setCarId(Long carId) {
+        this.carId = carId;
     }
 
-    public Shop getShop() {
-        return shop;
+    public Long getShopId() {
+        return shopId;
     }
 
-    public void setShop(Shop shop) {
-        this.shop = shop;
+    public void setShopId(Long shopId) {
+        this.shopId = shopId;
     }
 
     public int getStock() {

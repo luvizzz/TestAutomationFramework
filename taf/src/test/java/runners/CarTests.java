@@ -42,12 +42,12 @@ public class CarTests extends BaseTest {
 
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setName(UUID.randomUUID().toString());
-        manufacturer.setOriginCountry(createdCountry);
+        manufacturer.setCountryCode(createdCountry.getCode());
         Manufacturer createdManufacturer = manufacturerSteps.createManufacturer(manufacturer);
         MANUFACTURER_ID = createdManufacturer.getId();
 
         Car car = new Car();
-        car.setManufacturer(createdManufacturer);
+        car.setManufacturerId(createdManufacturer.getId());
         car.setName(UUID.randomUUID().toString());
         CAR_ID = carSteps.createCar(car).getId();
     }
@@ -71,17 +71,22 @@ public class CarTests extends BaseTest {
 
         //THEN
         assertEquals(response.getStatusCode(), SC_OK);
-        List<Long> allCarIds = response.jsonPath().getList("id");
+        List<Long> allCarIds = response.jsonPath().getList("id", Long.class);
+
+
+        LOG.info("Valor de CAR_ID: " + CAR_ID);
+        LOG.info("Lista de CAR_ID: " + allCarIds);
+
         assertTrue(allCarIds.contains(CAR_ID));
     }
 
     @Test
     public void getCar1() {
         //WHEN
-        JsonPath response = carSteps.getCarById(CAR_ID).jsonPath();
+        Response response = carSteps.getCarById(CAR_ID);
 
         //THEN
-        assertEquals((long) response.get("id"), CAR_ID);
+        assertEquals((int) response.jsonPath().get("id"), CAR_ID);
     }
 
     @Test
@@ -91,8 +96,8 @@ public class CarTests extends BaseTest {
         Response response = carSteps.getCarById(CAR_ID);
 
         //THEN
-        assertEquals((long) response.jsonPath().get("id"), CAR_ID);
+        assertEquals((int) response.jsonPath().get("id"), CAR_ID);
         Car responseCar = response.getBody().as(Car.class);
-        assertEquals(responseCar.getManufacturer(), manufacturer);
+        assertEquals(responseCar.getManufacturerId(), manufacturer.getId());
     }
 }
