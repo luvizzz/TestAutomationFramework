@@ -2,12 +2,12 @@ package domain;
 
 import java.util.Objects;
 
-public class Manufacturer {
+public class Manufacturer{
     private long id;
 
     private String name;
 
-    private Country originCountry;
+    private String countryCode;
 
     public long getId() {
         return id;
@@ -25,12 +25,12 @@ public class Manufacturer {
         this.name = name;
     }
 
-    public Country getOriginCountry() {
-        return originCountry;
+    public String getCountryCode() {
+        return countryCode;
     }
 
-    public void setOriginCountry(Country originCountry) {
-        this.originCountry = originCountry;
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
     }
 
     @Override
@@ -52,9 +52,9 @@ public class Manufacturer {
 
     @Override
     public String toString() {
-        return String.format("ID: %s, Name: %s, Country: %s",
+        return String.format("ID: %s, Name: %s, CountryCode: %s",
                 getId(),
                 getName(),
-                getOriginCountry().getName());
+                getCountryCode());
     }
 }

@@ -1,36 +1,28 @@
 package domain;
 
-public class Stock {
-    private Car car;
+import java.util.Objects;
 
-    private Shop shop;
+public class Stock{
+    private long carId;
+
+    private long shopId;
 
     private int stock;
 
-    private StockKey id;
-
-    public StockKey getId() {
-        return id;
+    public long getCarId() {
+        return carId;
     }
 
-    public void setId(StockKey id) {
-        this.id = id;
+    public void setCarId(long carId) {
+        this.carId = carId;
     }
 
-    public Car getCar() {
-        return car;
+    public long getShopId() {
+        return shopId;
     }
 
-    public void setCar(Car car) {
-        this.car = car;
-    }
-
-    public Shop getShop() {
-        return shop;
-    }
-
-    public void setShop(Shop shop) {
-        this.shop = shop;
+    public void setShopId(long shopId) {
+        this.shopId = shopId;
     }
 
     public int getStock() {
@@ -39,5 +31,30 @@ public class Stock {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(String.format("%d%d", getCarId(), getShopId()));
+    }
+
+    @Override
+    public boolean equals(Object that) {
+        if (this == that)
+            return true;
+        if (that == null)
+            return false;
+        if (getClass() != that.getClass())
+            return false;
+        Stock other = (Stock) that;
+        return getCarId() == other.getCarId() && getShopId() == other.getShopId();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Car Id: %s, Shop Id: %s, Stock: %s",
+                getCarId(),
+                getShopId(),
+                getStock());
     }
 }

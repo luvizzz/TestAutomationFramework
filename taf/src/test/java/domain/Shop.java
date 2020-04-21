@@ -2,7 +2,7 @@ package domain;
 
 import java.util.Objects;
 
-public class Shop {
+public class Shop{
     private long id;
 
     private String name;
