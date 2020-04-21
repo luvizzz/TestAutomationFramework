@@ -73,11 +73,7 @@ public class StockController extends BaseController {
                 .filter((shopId != null) ? byShopId(shopId) : x -> true)
                 .collect(Collectors.toList());
 
-        if (filteredStocks.size() > 0) {
-            return ResponseEntity.ok(filteredStocks);
-        } else {
-            return ResponseEntity.noContent().build();
-        }
+        return ResponseEntity.ok(filteredStocks);
     }
 
     @PostMapping

@@ -71,11 +71,7 @@ public class ShopController extends BaseController {
                 .filter(maybeName.<Predicate<? super Shop>> map (this::byName).orElseGet(() -> x -> true))
                 .collect(Collectors.toList());
 
-        if(filteredShops.size() > 0) {
-            return ResponseEntity.ok(filteredShops);
-        } else {
-            return ResponseEntity.noContent().build();
-        }
+        return ResponseEntity.ok(filteredShops);
     }
 
     @GetMapping(value="/{id}")

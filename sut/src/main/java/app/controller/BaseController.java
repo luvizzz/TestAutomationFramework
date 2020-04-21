@@ -5,6 +5,7 @@ import app.utils.JsonProperty;
 import app.utils.Utils;
 import org.joda.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public abstract class BaseController {
 
     protected ResponseEntity<String> createErrorResponse(ErrorMessage msg) {
         HttpStatus status = msg.getStatus();
-        return ResponseEntity.status(status).body(
+        return ResponseEntity.status(status).contentType(MediaType.APPLICATION_JSON).body(
                 Utils.toJson(List.of(
                         new JsonProperty("timestamp", LocalDateTime.now().toString(dateTime())),
                         new JsonProperty("status", status.value()),

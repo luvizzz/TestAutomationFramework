@@ -84,11 +84,8 @@ public class CarController extends BaseController {
                 .filter(maybeManufacturerId.<Predicate<? super Car>>map(this::byManufacturerId).orElseGet(() -> x -> true))
                 .collect(Collectors.toList());
 
-        if (filteredCars.size() > 0) {
-            return ResponseEntity.ok(filteredCars);
-        } else {
-            return ResponseEntity.noContent().build();
-        }
+
+        return ResponseEntity.ok(filteredCars);
     }
 
     @GetMapping(value = "/{id}")

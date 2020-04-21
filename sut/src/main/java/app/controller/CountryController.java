@@ -88,11 +88,7 @@ public class CountryController extends BaseController {
                 .filter(maybeName.<Predicate<? super Country>>map(this::byName).orElseGet(() -> x -> true))
                 .collect(Collectors.toList());
 
-        if (filteredCountries.size() > 0) {
-            return ResponseEntity.ok(filteredCountries);
-        } else {
-            return ResponseEntity.noContent().build();
-        }
+        return ResponseEntity.ok(filteredCountries);
     }
 
     @GetMapping("/{code}")

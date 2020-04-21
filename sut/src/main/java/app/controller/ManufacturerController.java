@@ -84,11 +84,7 @@ public class ManufacturerController extends BaseController {
                 .filter(maybeCountryCode.<Predicate<? super Manufacturer>> map (this::byCountryCode).orElseGet(() -> x -> true))
                 .collect(Collectors.toList());
 
-        if(filteredManufacturers.size() > 0) {
-            return ResponseEntity.ok(filteredManufacturers);
-        } else {
-            return ResponseEntity.noContent().build();
-        }
+        return ResponseEntity.ok(filteredManufacturers);
     }
 
     @GetMapping(value="/{id}")
