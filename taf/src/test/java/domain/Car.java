@@ -7,7 +7,7 @@ public class Car {
 
     private String name;
 
-    private Manufacturer manufacturer;
+    private Long manufacturerId;
 
     public long getId() {
         return id;
@@ -25,12 +25,12 @@ public class Car {
         this.name = name;
     }
 
-    public Manufacturer getManufacturer() {
-        return manufacturer;
+    public Long getManufacturerId() {
+        return manufacturerId;
     }
 
-    public void setManufacturer(Manufacturer manufacturer) {
-        this.manufacturer = manufacturer;
+    public void setManufacturerId(Long manufacturerId) {
+        this.manufacturerId = manufacturerId;
     }
 
     @Override
@@ -55,6 +55,6 @@ public class Car {
         return String.format("ID: %s, Name: %s, Manufacturer: %s",
                 getId(),
                 getName(),
-                getManufacturer().toString());
+                getManufacturerId());
     }
 }

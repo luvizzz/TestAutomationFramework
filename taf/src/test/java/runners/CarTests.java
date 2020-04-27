@@ -6,16 +6,13 @@ import domain.Country;
 import domain.Manufacturer;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -39,17 +36,21 @@ public class CarTests extends BaseTest {
         country.setCode(newCountryCode());
         country.setName(UUID.randomUUID().toString());
         Country createdCountry = countrySteps.createCountry(country);
+        Assumptions.assumeTrue(createdCountry.getCode() != null, "Country was created");
 
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setName(UUID.randomUUID().toString());
-        manufacturer.setOriginCountry(createdCountry);
+        manufacturer.setCountryCode(createdCountry.getCode());
         Manufacturer createdManufacturer = manufacturerSteps.createManufacturer(manufacturer);
         MANUFACTURER_ID = createdManufacturer.getId();
+        Assumptions.assumeTrue(createdManufacturer.getId() != 0);
 
         Car car = new Car();
-        car.setManufacturer(createdManufacturer);
+        car.setManufacturerId(createdManufacturer.getId());
         car.setName(UUID.randomUUID().toString());
-        CAR_ID = carSteps.createCar(car).getId();
+        Car createdCar = carSteps.createCar(car);
+        CAR_ID = createdCar.getId();
+        Assumptions.assumeTrue(CAR_ID != 0);
     }
 
     @AfterEach
@@ -66,22 +67,31 @@ public class CarTests extends BaseTest {
 
     @Test
     public void getAllCars() {
+        //GIVEN
+        Response setUp = carSteps.getAllCars();
+        Assumptions.assumeTrue(setUp.getStatusCode() == SC_BAD_REQUEST, "GET all cars failed");
+
         //WHEN
         Response response = carSteps.getAllCars();
 
         //THEN
         assertEquals(response.getStatusCode(), SC_OK);
-        List<Long> allCarIds = response.jsonPath().getList("id");
+        List<Long> allCarIds = response.jsonPath().getList("id", Long.class);
+
+
+        LOG.info("Valor de CAR_ID: " + CAR_ID);
+        LOG.info("Lista de CAR_ID: " + allCarIds);
+
         assertTrue(allCarIds.contains(CAR_ID));
     }
 
     @Test
     public void getCar1() {
         //WHEN
-        JsonPath response = carSteps.getCarById(CAR_ID).jsonPath();
+        Response response = carSteps.getCarById(CAR_ID);
 
         //THEN
-        assertEquals((long) response.get("id"), CAR_ID);
+        assertEquals((int) response.jsonPath().get("id"), CAR_ID);
     }
 
     @Test
@@ -91,8 +101,8 @@ public class CarTests extends BaseTest {
         Response response = carSteps.getCarById(CAR_ID);
 
         //THEN
-        assertEquals((long) response.jsonPath().get("id"), CAR_ID);
+        assertEquals((int) response.jsonPath().get("id"), CAR_ID);
         Car responseCar = response.getBody().as(Car.class);
-        assertEquals(responseCar.getManufacturer(), manufacturer);
+        assertEquals(responseCar.getManufacturerId(), manufacturer.getId());
     }
 }
