@@ -8,20 +8,6 @@ import io.restassured.response.Response;
 
 public class CountrySteps extends BaseSteps {
 
-    public Country createCountry(Country country) {
-            return super.given()
-                    .body(country)
-                    .when()
-                    .basePath("/country")
-                    .log().all()
-                    .post()
-                    .then()
-                    .statusCode(201)
-                    .contentType(ContentType.JSON)
-                    .log().all()
-                    .extract().as(Country.class);
-    }
-
     public Response createCountryResponse(Country country) {
         return super.given()
                 .body(country)
@@ -30,5 +16,9 @@ public class CountrySteps extends BaseSteps {
                 .log()
                 .all()
                 .post();
+    }
+
+    public Country createCountry(Country country) {
+        return createCountryResponse(country).as(Country.class);
     }
 }
