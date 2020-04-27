@@ -6,16 +6,13 @@ import domain.Country;
 import domain.Manufacturer;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -39,17 +36,21 @@ public class CarTests extends BaseTest {
         country.setCode(newCountryCode());
         country.setName(UUID.randomUUID().toString());
         Country createdCountry = countrySteps.createCountry(country);
+        Assumptions.assumeTrue(createdCountry.getCode() != null, "Country was created");
 
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setName(UUID.randomUUID().toString());
         manufacturer.setCountryCode(createdCountry.getCode());
         Manufacturer createdManufacturer = manufacturerSteps.createManufacturer(manufacturer);
         MANUFACTURER_ID = createdManufacturer.getId();
+        Assumptions.assumeTrue(createdManufacturer.getId() != 0);
 
         Car car = new Car();
         car.setManufacturerId(createdManufacturer.getId());
         car.setName(UUID.randomUUID().toString());
-        CAR_ID = carSteps.createCar(car).getId();
+        Car createdCar = carSteps.createCar(car);
+        CAR_ID = createdCar.getId();
+        Assumptions.assumeTrue(CAR_ID != 0);
     }
 
     @AfterEach
@@ -66,6 +67,10 @@ public class CarTests extends BaseTest {
 
     @Test
     public void getAllCars() {
+        //GIVEN
+        Response setUp = carSteps.getAllCars();
+        Assumptions.assumeTrue(setUp.getStatusCode() == SC_BAD_REQUEST, "GET all cars failed");
+
         //WHEN
         Response response = carSteps.getAllCars();
 
