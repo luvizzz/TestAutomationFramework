@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.logging.Logger;
 
+import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -51,7 +52,6 @@ public class GetCountryTests extends BaseTest {
 
     @Test
     public void getAllCountriesFilteringByName() {
-
         //WHEN
         Response response = countrySteps.getAllFilteringByNameAsResponse("test");
 
@@ -66,7 +66,6 @@ public class GetCountryTests extends BaseTest {
 
     @Test
     public void getAllCountriesByCode() {
-
         //WHEN
         Response response = countrySteps.getByIdAsResponse("BR");
 
@@ -85,5 +84,54 @@ public class GetCountryTests extends BaseTest {
 
         LOG.info("all retrieved data: ");
         retrievedCountries.forEach(c -> LOG.info(String.format("code: %s, name: %s", c.getCode(), c.getName())));
+    }
+
+    @Test
+    public void getAllCountriesByCodeAndName() {
+        //WHEN
+        Response response = countrySteps.getAllFilteringByCodeAndNameAsResponse("BR", "Brazil");
+
+        //THEN
+        assertEquals(SC_OK, response.getStatusCode());
+        List<Country> retrievedCountries = response.jsonPath().getList(".", Country.class);
+
+        LOG.info("all retrieved data: ");
+        retrievedCountries.forEach(c -> LOG.info(String.format("code: %s, name: %s", c.getCode(), c.getName())));
+    }
+
+    @Test
+    public void getCountriesNotFoundByCodeAndNameInvalidName() {
+        //WHEN
+        Response response = countrySteps.getAllFilteringByCodeAndNameAsResponse("BR", "XXXXXX");
+
+        //THEN
+        assertEquals(SC_NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
+    public void getCountriesNotFoundByCodeAndNameInvalidCode() {
+        //WHEN
+        Response response = countrySteps.getAllFilteringByCodeAndNameAsResponse("XX", "Brazil");
+
+        //THEN
+        assertEquals(SC_NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
+    public void getCountriesNotFoundByCode() {
+        //WHEN
+        Response response = countrySteps.getAllFilteringByCodeAsResponse("XX");
+
+        //THEN
+        assertEquals(SC_NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
+    public void getCountriesNotFoundByName() {
+        //WHEN
+        Response response = countrySteps.getAllFilteringByNameAsResponse("XXXXXXX");
+
+        //THEN
+        assertEquals(SC_NO_CONTENT, response.getStatusCode());
     }
 }
