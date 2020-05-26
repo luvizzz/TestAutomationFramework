@@ -1,0 +1,17 @@
+
+.menu-icon {
+  font-size:30px;
+  cursor:pointer;
+  width: 20vw;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 10vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
