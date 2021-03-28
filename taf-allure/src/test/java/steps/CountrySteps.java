@@ -2,9 +2,8 @@ package steps;
 
 import base.BaseSteps;
 import domain.Country;
+import io.qameta.allure.Step;
 import io.restassured.response.Response;
-
-import java.util.List;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CountrySteps extends BaseSteps {
 
+    @Step("Create a country")
     public Response createCountryResponse(String body) {
         return super.given()
                 .body(body)
@@ -25,6 +25,7 @@ public class CountrySteps extends BaseSteps {
                 .extract().response();
     }
 
+    @Step("Create a country")
     public Response createCountryResponse(Country country) {
         return super.given()
                 .body(country)
@@ -38,12 +39,14 @@ public class CountrySteps extends BaseSteps {
                 .extract().response();
     }
 
+    @Step("Create a country")
     public Country createCountry(Country country) {
         Response response = createCountryResponse(country);
         assertEquals(SC_CREATED, response.getStatusCode());
         return response.as(Country.class);
     }
 
+    @Step("Get all countries")
     public Response getAllAsResponse() {
         return super.given()
                 .when()
@@ -56,6 +59,7 @@ public class CountrySteps extends BaseSteps {
                 .extract().response();
     }
 
+    @Step("Get all countries filtering by code {0}")
     public Response getAllFilteringByCodeAsResponse(String code) {
         return super.given()
                 .when()
@@ -68,6 +72,8 @@ public class CountrySteps extends BaseSteps {
                 .log().all()
                 .extract().response();
     }
+
+    @Step("Get all countries filtering by name {0}")
     public Response getAllFilteringByNameAsResponse(String name) {
         return super.given()
                 .when()
@@ -80,6 +86,8 @@ public class CountrySteps extends BaseSteps {
                 .log().all()
                 .extract().response();
     }
+
+    @Step("Get all countries filtering by code {0} and name {1}")
     public Response getAllFilteringByCodeAndNameAsResponse(String code, String name) {
         return super.given()
                 .when()
@@ -93,6 +101,7 @@ public class CountrySteps extends BaseSteps {
                 .extract().response();
     }
 
+    @Step("Get country by code {0}")
     public Response getByIdAsResponse(String id) {
         return super.given()
                 .when()
@@ -104,5 +113,4 @@ public class CountrySteps extends BaseSteps {
                 .log().all()
                 .extract().response();
     }
-
 }
