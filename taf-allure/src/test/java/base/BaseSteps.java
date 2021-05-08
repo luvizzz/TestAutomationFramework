@@ -14,7 +14,8 @@ public class BaseSteps {
                 .addFilter(new AllureRestAssured())
                 .build();
 
-        return RestAssured.given().baseUri(ROOT_URI)
+        return RestAssured.given()
+                .baseUri(ROOT_URI)
                 .contentType(ContentType.JSON)
                 .spec(spec)
         ;

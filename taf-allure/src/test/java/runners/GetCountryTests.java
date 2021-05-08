@@ -21,14 +21,14 @@ public class GetCountryTests extends BaseTest {
         //GIVEN
         Country country = new Country();
 
-        String countryCode = newCountryCode(); //valor esperado que seja persistido
+        String countryCode = newCountryCode();
         country.setCode(countryCode);
 
         String countryName = "test2";
         country.setName(countryName);
 
         //AND
-        Country expectedCountry = countrySteps.createCountry(country); //valor retornado pelo servico
+        Country expectedCountry = countrySteps.createCountry(country);
 
         //WHEN
         Response response = countrySteps.getAllAsResponse();

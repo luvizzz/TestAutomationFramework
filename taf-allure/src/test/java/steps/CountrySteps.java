@@ -16,12 +16,9 @@ public class CountrySteps extends BaseSteps {
         return super.given()
                 .body(body)
                 .when()
-                .basePath("/country")
-                .log()
-                .all()
+                .basePath("/country").log().all()
                 .post()
-                .then()
-                .log().all()
+                .then().log().all()
                 .extract().response();
     }
 
@@ -30,12 +27,9 @@ public class CountrySteps extends BaseSteps {
         return super.given()
                 .body(country)
                 .when()
-                .basePath("/country")
-                .log()
-                .all()
+                .basePath("/country").log().all()
                 .post()
-                .then()
-                .log().all()
+                .then().log().all()
                 .extract().response();
     }
 

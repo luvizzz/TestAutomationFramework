@@ -1,5 +1,6 @@
 package base;
 
+import io.qameta.allure.Step;
 import steps.CarSteps;
 import steps.CountrySteps;
 import steps.ManufacturerSteps;
@@ -7,6 +8,8 @@ import steps.ShopSteps;
 import steps.StockSteps;
 
 import java.util.Random;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BaseTest {
     protected Random rand = new Random();
@@ -31,5 +34,10 @@ public class BaseTest {
                 .limit(targetStringLength)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
+    }
+
+    @Step("Asserting that response status code is {0}")
+    protected void assertResponseCode(int expected, int actual) {
+        assertEquals(expected, actual);
     }
 }
