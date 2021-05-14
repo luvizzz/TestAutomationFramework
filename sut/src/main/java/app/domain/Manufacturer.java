@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import java.util.List;
 
 @Entity
-@Table(name="manufacturer", schema="sut")
+@Table(name="manufacturer")
 public class Manufacturer {
 
     @Id

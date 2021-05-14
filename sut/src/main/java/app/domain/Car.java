@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name="car", schema="sut")
+@Table(name="car")
 public class Car {
 
     @Id

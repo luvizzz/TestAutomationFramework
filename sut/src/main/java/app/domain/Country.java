@@ -9,7 +9,7 @@ import javax.persistence.Table;
 import java.util.List;
 
 @Entity
-@Table(name="country", schema="sut")
+@Table(name="country")
 public class Country {
 
     @Id

@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import java.util.List;
 
 @Entity
-@Table(name="stock", schema="sut")
+@Table(name="stock")
 public class Stock {
 
     @EmbeddedId

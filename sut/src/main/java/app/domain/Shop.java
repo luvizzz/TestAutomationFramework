@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name="shop", schema="sut")
+@Table(name="shop")
 public class Shop {
 
     @Id
