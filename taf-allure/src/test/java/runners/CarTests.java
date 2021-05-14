@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.Utils;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,7 +38,7 @@ public class CarTests extends BaseTest {
         LOG.info("--- setup (BeforeEach)");
 
         Country country = new Country();
-        country.setCode(newCountryCode());
+        country.setCode(Utils.newCountryCode());
         country.setName(UUID.randomUUID().toString());
         Country createdCountry = countrySteps.createCountry(country);
         Assumptions.assumeTrue(createdCountry.getCode() != null, "Country was created");

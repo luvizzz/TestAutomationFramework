@@ -6,6 +6,7 @@ import io.qameta.allure.Issue;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
+import utils.Utils;
 
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -22,14 +23,14 @@ public class CreateCountryTests extends BaseTest {
     public void postCountry() {
         //GIVEN
         Country country = new Country();
-        country.setCode(newCountryCode());
+        country.setCode(Utils.newCountryCode());
         country.setName(UUID.randomUUID().toString());
 
         //WHEN
         Response response = countrySteps.createCountryResponse(country);
 
         //THEN
-        assertResponseCode(SC_CREATED, response.getStatusCode());
+        countrySteps.assertResponseCode(SC_CREATED, response.getStatusCode());
     }
 
     @Test
@@ -37,7 +38,7 @@ public class CreateCountryTests extends BaseTest {
         //GIVEN
         Country country = new Country();
 
-        String countryCode = newCountryCode();
+        String countryCode = Utils.newCountryCode();
         country.setCode(countryCode);
 
         String countryName = "test";
@@ -47,7 +48,7 @@ public class CreateCountryTests extends BaseTest {
         Response response = countrySteps.createCountryResponse(country);
 
         //THEN
-        assertResponseCode(SC_CREATED, response.getStatusCode());
+        countrySteps.assertResponseCode(SC_CREATED, response.getStatusCode());
         assertEquals(countryCode, response.jsonPath().get("code"));
         assertEquals(countryName, response.jsonPath().get("name"));
     }
@@ -57,7 +58,7 @@ public class CreateCountryTests extends BaseTest {
         //GIVEN
         Country country = new Country();
 
-        String countryCode = newCountryCode();
+        String countryCode = Utils.newCountryCode();
         country.setCode(countryCode);
 
         String countryName = "test";
@@ -69,7 +70,7 @@ public class CreateCountryTests extends BaseTest {
         Response response = countrySteps.createCountryResponse(country);
 
         //THEN
-        assertResponseCode(SC_BAD_REQUEST, response.getStatusCode());
+        countrySteps.assertResponseCode(SC_BAD_REQUEST, response.getStatusCode());
         assertEquals("Entity already exists", response.jsonPath().get("message"));
     }
 
@@ -80,7 +81,7 @@ public class CreateCountryTests extends BaseTest {
         country.setName(UUID.randomUUID().toString());
 
         Response response = countrySteps.createCountryResponse(country);
-        assertResponseCode(SC_BAD_REQUEST, response.getStatusCode());
+        countrySteps.assertResponseCode(SC_BAD_REQUEST, response.getStatusCode());
     }
 
     @Test //Bug, we should see 400 but got 500
@@ -90,7 +91,7 @@ public class CreateCountryTests extends BaseTest {
         country.setName(UUID.randomUUID().toString());
 
         Response response = countrySteps.createCountryResponse(country);
-        assertResponseCode(SC_BAD_REQUEST, response.getStatusCode());
+        countrySteps.assertResponseCode(SC_BAD_REQUEST, response.getStatusCode());
     }
 
     @Test //Bug, we should see 400 but got 500
@@ -101,17 +102,17 @@ public class CreateCountryTests extends BaseTest {
                 "}";
 
         Response response = countrySteps.createCountryResponse(body);
-        assertResponseCode(SC_BAD_REQUEST, response.getStatusCode());
+        countrySteps.assertResponseCode(SC_BAD_REQUEST, response.getStatusCode());
     }
 
     @Test //Bug, we should see 400 but got 500
     public void postCountryWithoutName() {
         Country country = new Country();
-        country.setCode(newCountryCode());
+        country.setCode(Utils.newCountryCode());
         country.setName(null);
 
         Response response = countrySteps.createCountryResponse(country);
-        assertResponseCode(SC_BAD_REQUEST, response.getStatusCode());
+        countrySteps.assertResponseCode(SC_BAD_REQUEST, response.getStatusCode());
     }
 
     @Test //Bug, we should see 400 but got 500
@@ -121,6 +122,6 @@ public class CreateCountryTests extends BaseTest {
         country.setName(null);
 
         Response response = countrySteps.createCountryResponse(country);
-        assertResponseCode(SC_BAD_REQUEST, response.getStatusCode());
+        countrySteps.assertResponseCode(SC_BAD_REQUEST, response.getStatusCode());
     }
 }

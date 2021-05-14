@@ -4,6 +4,7 @@ import base.BaseTest;
 import domain.Country;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
+import utils.Utils;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -21,7 +22,7 @@ public class GetCountryTests extends BaseTest {
         //GIVEN
         Country country = new Country();
 
-        String countryCode = newCountryCode();
+        String countryCode = Utils.newCountryCode();
         country.setCode(countryCode);
 
         String countryName = "test2";
