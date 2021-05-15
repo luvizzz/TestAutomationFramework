@@ -2,11 +2,14 @@ package steps;
 
 import base.BaseSteps;
 import domain.Manufacturer;
+import io.qameta.allure.Step;
 import io.restassured.response.Response;
 
 public class ManufacturerSteps extends BaseSteps {
+    @Step
     public Response getManufacturerById(long manufacturerId) {
-        return super.given()
+        return given()
+                .baseUri(ROOT_URI)
                 .when()
                 .basePath(String.format("/manufacturer/%d", manufacturerId))
                 .log().all()
@@ -17,8 +20,10 @@ public class ManufacturerSteps extends BaseSteps {
                 .response();
     }
 
+    @Step
     public Manufacturer createManufacturer(Manufacturer manufacturer) {
-        return super.given()
+        return given()
+                .baseUri(ROOT_URI)
                 .body(manufacturer)
                 .when()
                 .basePath("/manufacturer")

@@ -4,11 +4,10 @@ import base.BaseTest;
 import domain.Car;
 import domain.Country;
 import domain.Manufacturer;
+import io.qameta.allure.Step;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assumptions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utils.Utils;
@@ -22,21 +21,21 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
 public class CarTests extends BaseTest {
     private final static Logger LOG = Logger.getLogger(CarTests.class.getSimpleName());
     long CAR_ID;
     long MANUFACTURER_ID;
 
-    @BeforeAll
-    static void setupAll() {
-        LOG.info("- setupAll (@BeforeAll)");
-    }
+//    @BeforeAll
+//    static void setupAll() {
+//        LOG.info("- setupAll (@BeforeAll)");
+//    }
 
+    @Step("Setting up")
     @BeforeEach
     private void setup() {
         LOG.info("--- setup (BeforeEach)");
-        //super.init(); not needed. see @BeforeEach annotation documentation
+        //super.init(); //not needed. see @BeforeEach annotation documentation
 
         Country country = new Country();
         country.setCode(Utils.newCountryCode());
@@ -59,16 +58,17 @@ public class CarTests extends BaseTest {
         Assumptions.assumeTrue(CAR_ID != 0);
     }
 
+    @Step("Tearing down")
     @AfterEach
     private void teardown() {
         LOG.info("--- teardown (AfterEach)");
-        //super.tearDown();  not needed. see @AfterEach annotation documentation
+        //super.tearDown();  //not needed. see @AfterEach annotation documentation
     }
 
-    @AfterAll
-    static void teardownAll() {
-        LOG.info("- teardownAll (@AfterAll)");
-    }
+//    @AfterAll
+//    static void teardownAll() {
+//        LOG.info("- teardownAll (@AfterAll)");
+//    }
 
     @Test
     public void getAllCars() {

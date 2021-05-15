@@ -3,6 +3,8 @@ package base;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import steps.CarSteps;
 import steps.CountrySteps;
@@ -12,6 +14,7 @@ import steps.StockSteps;
 
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
+@Execution(ExecutionMode.CONCURRENT)
 public class BaseTest {
     String DB_IMAGE = "postgres:9.6.12";
     String DB_NAME = "postgres";
