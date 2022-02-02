@@ -15,7 +15,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <postgresVersion>42.2.10</postgresVersion>
+        <postgresVersion>42.2.25</postgresVersion>
         <spring-boot-starter-parent.version>2.2.5.RELEASE</spring-boot-starter-parent.version>
     </properties>
 
