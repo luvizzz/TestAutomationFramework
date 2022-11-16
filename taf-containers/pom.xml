@@ -27,7 +27,7 @@
         <allure.maven.version>2.10.0</allure.maven.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <allure-junit5.version>2.13.8</allure-junit5.version>
-        <jackson-databind.version>2.10.5.1</jackson-databind.version>
+        <jackson-databind.version>2.12.7.1</jackson-databind.version>
         <slf4j-api.version>1.8.0-beta4</slf4j-api.version>
         <freemarker.version>2.3.31</freemarker.version>
         <allure-maven.reportVersion>2.4.1</allure-maven.reportVersion>
